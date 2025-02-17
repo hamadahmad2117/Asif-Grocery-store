@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asif Grocery Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                Asif Grocery Store
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#products"><i class="fas fa-shopping-basket"></i> Products</a></li>
+                <li><a href="catalog.html"><i class="fas fa-list"></i> Full Catalog</a></li>
+                <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to Asif Grocery Store</h1>
+            <p>Experience Premium Quality & Fresh Products</p>
+            <div class="hero-features">
+                <div class="feature">
+                    <i class="fas fa-truck"></i>
+                    <span>Fast Delivery</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-leaf"></i>
+                    <span>Fresh Products</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-tag"></i>
+                    <span>Best Prices</span>
+                </div>
+            </div>
+            <a href="#products" class="cta-button">Shop Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <section class="highlights">
+        <div class="highlight-container">
+            <div class="highlight-card">
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" alt="Fresh Produce" class="highlight-image">
+                <div class="highlight-content">
+                    <h2>Fresh Produce Daily</h2>
+                    <p>Hand-picked fresh fruits and vegetables delivered to your doorstep</p>
+                </div>
+            </div>
+            <div class="highlight-card">
+                <img src="https://images.unsplash.com/photo-1608686207856-001b95cf60ca" alt="Premium Quality" class="highlight-image">
+                <div class="highlight-content">
+                    <h2>Premium Quality</h2>
+                    <p>Carefully selected high-quality products for your family</p>
+                </div>
+            </div>
+            <div class="highlight-card">
+                <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d" alt="Best Deals" class="highlight-image">
+                <div class="highlight-content">
+                    <h2>Best Deals</h2>
+                    <p>Great savings on your favorite products every day</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-categories">
+        <h2>Shop by Category</h2>
+        <div class="category-grid">
+            <a href="#products" class="category-card">
+                <img src="https://images.unsplash.com/photo-1516594798947-e65505dbb29d" alt="Fresh Fruits" class="category-image">
+                <div class="category-overlay">
+                    <h3>Fresh Fruits</h3>
+                </div>
+            </a>
+            <a href="#products" class="category-card">
+                <img src="https://images.unsplash.com/photo-1566385101042-1a0aa0c32c8c" alt="Fresh Vegetables" class="category-image">
+                <div class="category-overlay">
+                    <h3>Fresh Vegetables</h3>
+                </div>
+            </a>
+            <a href="#products" class="category-card">
+                <img src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d" alt="Dairy Products" class="category-image">
+                <div class="category-overlay">
+                    <h3>Dairy Products</h3>
+                </div>
+            </a>
+            <a href="#products" class="category-card">
+                <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b" alt="Premium Chocolates" class="category-image">
+                <div class="category-overlay">
+                    <h3>Premium Chocolates</h3>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Category Navigation -->
+    <div class="category-nav">
+        <div class="container">
+            <ul class="category-list">
+                <li><a href="#groceries" class="category-link active">Groceries</a></li>
+                <li><a href="#snacks" class="category-link">Snacks</a></li>
+                <li><a href="#stationery" class="category-link">Stationery</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <section id="products" class="section">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <div id="products-container" class="products-grid">
+                <!-- Featured products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="featured-products-grid" id="featured-products">
+                <!-- Featured products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-sections">
+        <div class="section premium-section">
+            <h2>Premium Quality Products</h2>
+            <div id="premium-products" class="products-grid">
+                <!-- Premium products will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div class="section fresh-section">
+            <h2>Fresh Produce Daily</h2>
+            <div id="fresh-products" class="products-grid">
+                <!-- Fresh products will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div class="section deals-section">
+            <h2>Best Deals</h2>
+            <div id="deal-products" class="products-grid">
+                <!-- Deal products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Sections -->
+    <section id="snacks" class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Snacks & Refreshments</h2>
+            <div class="category-description">
+                <p>Discover our delicious selection of snacks, including traditional favorites and international treats.</p>
+            </div>
+            <div class="products-grid" id="snacks-container">
+                <!-- Snacks will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <section id="stationery" class="section">
+        <div class="container">
+            <h2 class="section-title">Stationery</h2>
+            <div class="category-description">
+                <p>Everything you need for school, office, or creative work - quality stationery at great prices.</p>
+            </div>
+            <div class="products-grid" id="stationery-container">
+                <!-- Stationery products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <div class="view-all-container">
+        <a href="catalog.html" class="view-all-btn">View Full Catalog</a>
+    </div>
+
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Welcome to Asif Grocery Store, your trusted neighborhood grocery store. We take pride in offering high-quality groceries, fresh products, and daily essentials at competitive prices.</p>
+                <p>Our commitment to quality and customer satisfaction has made us a trusted name in the community since our establishment.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-container">
+            <form id="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+            <div class="contact-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Lahore, Pakistan</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <p>+92 31914612</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>hamadahmad2117@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Asif Grocery Store</h3>
+                <p>Your trusted grocery partner</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Asif Grocery Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
