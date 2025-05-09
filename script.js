@@ -1001,7 +1001,7 @@ const featuredProducts = [
     }
 ];
 
-// Combine products, removing duplicates by id
+// Combine products, remove duplicates
 const allProducts = [...products, ...additionalProducts.filter(p => !products.some(op => op.id === p.id))];
 console.log(`Total products available: ${allProducts.length}`);
 
@@ -1039,14 +1039,14 @@ function renderProducts(productsToRender, containerId) {
     }
     console.log(`Rendering ${productsToRender.length} products to ${containerId}`);
     container.innerHTML = '<div class="loading-spinner">Loading products...</div>';
-    
+
     setTimeout(() => {
         container.innerHTML = '';
         productsToRender.forEach(product => {
-            const originalPrice = product.price * 1.2; // Simulate original price
+            const originalPrice = product.price * 1.2;
             const discountPercentage = calculateDiscount(originalPrice, product.price);
-            const rating = (Math.random() * 2 + 3).toFixed(1); // Random rating 3-5
-            const ratingCount = Math.floor(Math.random() * 1000) + 50; // Random rating count
+            const rating = (Math.random() * 2 + 3).toFixed(1);
+            const ratingCount = Math.floor(Math.random() * 1000) + 50;
 
             const productCard = `
                 <div class="product-card">
@@ -1119,42 +1119,11 @@ function renderAllProducts() {
     }
 }
 
-// Category-specific rendering
+// Category filtering
 function renderCategoryProducts(category, containerId) {
     const filteredProducts = allProducts.filter(product => product.category === category);
     console.log(`Rendering ${filteredProducts.length} products for category: ${category}`);
     renderProducts(filteredProducts, containerId);
-}
-
-// Home page rendering functions
-function renderFeaturedProducts() {
-    const featuredProducts = allProducts.sort(() => Math.random() - 0.5).slice(0, 8);
-    renderProducts(featuredProducts, 'products-container');
-}
-
-function renderPremiumProducts() {
-    const premiumProducts = allProducts.filter(p => p.price > 7).slice(0, 8);
-    renderProducts(premiumProducts, 'premium-products');
-}
-
-function renderFreshProducts() {
-    const freshProducts = allProducts.filter(p => ['Fruits', 'Vegetables'].includes(p.category)).slice(0, 8);
-    renderProducts(freshProducts, 'fresh-products');
-}
-
-function renderDealProducts() {
-    const dealProducts = allProducts.sort((a, b) => a.price - b.price).slice(0, 8);
-    renderProducts(dealProducts, 'deal-products');
-}
-
-function renderSnacksProducts() {
-    const snacksProducts = allProducts.filter(p => p.category === 'Snacks').slice(0, 8);
-    renderProducts(snacksProducts, 'snacks-container');
-}
-
-function renderStationeryProducts() {
-    const stationeryProducts = allProducts.filter(p => p.category === 'Stationery').slice(0, 8);
-    renderProducts(stationeryProducts, 'stationery-container');
 }
 
 // Cart functionality
@@ -1170,73 +1139,8 @@ function addToCart(productId) {
             cart.push({ ...product, quantity: 1 });
         }
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartDisplay();
         console.log(`Added product ${productId} to cart`);
     } else {
         console.error(`Product ${productId} not found`);
     }
 }
-
-function updateCartDisplay() {
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartItemsContainer && cartTotalElement) {
-        cartItemsContainer.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>${item.name}</h3>
-                    <p>$${formatPrice(item.price)} x ${item.quantity}</p>
-                </div>
-                <button class="remove-from-cart" onclick="removeFromCart(${item.id})">Remove</button>
-            </div>
-        `).join('');
-        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        cartTotalElement.textContent = `$${formatPrice(total)}`;
-    }
-}
-
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartDisplay();
-    console.log(`Removed product ${productId} from cart`);
-}
-
-// Modal functionality
-function openCartModal() {
-    const modal = document.getElementById('cartModal');
-    if (modal) {
-        modal.style.display = 'block';
-        updateCartDisplay();
-    } else {
-        console.error('Cart modal not found');
-    }
-}
-
-function closeCartModal() {
-    const modal = document.getElementById('cartModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Initialize home page
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('products-container')) {
-        console.log('Initializing home page...');
-        renderFeaturedProducts();
-        renderPremiumProducts();
-        renderFreshProducts();
-        renderDealProducts();
-        renderSnacksProducts();
-        renderStationeryProducts();
-    }
-});
-
-// Handle modal close
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('close-modal')) {
-        closeCartModal();
-    }
-});
