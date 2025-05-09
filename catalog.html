@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Catalog - Asif Grocery Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                Asif Grocery Store
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="index.html#products"><i class="fas fa-shopping-basket"></i> Products</a></li>
+                <li><a href="catalog.html" class="active"><i class="fas fa-list"></i> Full Catalog</a></li>
+                <li><a href="index.html#about"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="catalog-page">
+        <section class="catalog-hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Our Complete Catalog</h1>
+                <p>Discover our wide range of quality products</p>
+            </div>
+        </section>
+
+        <section class="catalog-section">
+            <div class="container">
+                <div class="catalog-filters">
+                    <div class="filter-group">
+                        <label for="category-filter">Filter by Category:</label>
+                        <select id="category-filter" class="styled-select">
+                            <option value="all">All Categories</option>
+                            <option value="Grains">Grains</option>
+                            <option value="Vegetables">Vegetables</option>
+                            <option value="Fruits">Fruits</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Beverages">Beverages</option>
+                            <option value="Snacks">Snacks</option>
+                            <option value="Condiments">Condiments</option>
+                            <option value="Bakery">Bakery</option>
+                            <option value="Sweets">Sweets</option>
+                        </select>
+                    </div>
+                    <div class="sort-group">
+                        <label>Sort by Price:</label>
+                        <div class="sort-buttons">
+                            <button id="sort-price-asc" class="sort-btn">
+                                <i class="fas fa-sort-amount-down-alt"></i> Low to High
+                            </button>
+                            <button id="sort-price-desc" class="sort-btn">
+                                <i class="fas fa-sort-amount-down"></i> High to Low
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="all-products" class="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Asif Grocery Store</h3>
+                <p>Your trusted grocery partner</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-envelope"></i> hamadahmad2117@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +92 3191461612</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Asif Grocery Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <p id="notification-message"></p>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllProducts();
+
+            // Add event listeners for sorting and filtering
+            document.getElementById('category-filter').addEventListener('change', (e) => {
+                const category = e.target.value;
+                const productsContainer = document.getElementById('all-products');
+                productsContainer.innerHTML = '';
+                
+                if (category === 'all') {
+                    renderAllProducts();
+                } else {
+                    renderCategoryProducts(category, 'all-products');
+                }
+            });
+
+            document.getElementById('sort-price-asc').addEventListener('click', () => {
+                const sortedProducts = [...products].sort((a, b) => a.price - b.price);
+                renderProducts(sortedProducts, 'all-products');
+            });
+
+            document.getElementById('sort-price-desc').addEventListener('click', () => {
+                const sortedProducts = [...products].sort((a, b) => b.price - a.price);
+                renderProducts(sortedProducts, 'all-products');
+            });
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
