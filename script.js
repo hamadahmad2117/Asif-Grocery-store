@@ -1001,395 +1001,242 @@ const featuredProducts = [
     }
 ];
 
-// Create arrays for special sections
-const premiumProducts = allProducts.filter(product => product.category === "Premium");
-const freshProducts = allProducts.filter(product => product.category === "Fresh");
-const dealProducts = allProducts.filter(product => product.deal);
+// Combine products, removing duplicates by id
+const allProducts = [...products, ...additionalProducts.filter(p => !products.some(op => op.id === p.id))];
+console.log(`Total products available: ${allProducts.length}`);
 
-// Function to render premium products
-function renderPremiumProducts() {
-    const container = document.getElementById('premium-products');
-    if (container) {
-        container.innerHTML = '';
-        premiumProducts.forEach(product => {
-            const productCard = createProductCard(product);
-            container.appendChild(productCard);
-        });
-    }
-}
-
-// Function to render fresh products
-function renderFreshProducts() {
-    const container = document.getElementById('fresh-products');
-    if (container) {
-        container.innerHTML = '';
-        freshProducts.forEach(product => {
-            const productCard = createProductCard(product);
-            container.appendChild(productCard);
-        });
-    }
-}
-
-// Function to render deal products
-function renderDealProducts() {
-    const container = document.getElementById('deal-products');
-    if (container) {
-        container.innerHTML = '';
-        dealProducts.forEach(product => {
-            const productCard = createProductCard(product);
-            if (product.deal) {
-                const dealBadge = document.createElement('div');
-                dealBadge.className = 'deal-badge';
-                dealBadge.textContent = product.deal;
-                productCard.appendChild(dealBadge);
-            }
-            container.appendChild(productCard);
-        });
-    }
-}
-
-// Shopping cart
-let cart = [];
-let cartCount = 0;
-
-// DOM Elements
-const productContainer = document.getElementById('product-container');
-const cartCountElement = document.querySelector('.cart-count');
-const contactForm = document.getElementById('contact-form');
-const menuToggle = document.getElementById('menuToggle');
-const navLinks = document.getElementById('navLinks');
-
-// Function to render featured products
-function renderFeaturedProducts() {
-    productContainer.innerHTML = featuredProducts.map(product => `
-        <div class="product-card">
-            <img src="${product.image}" alt="${product.name}" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-price">$${product.price.toFixed(2)}</p>
-                <div class="product-buttons">
-                    <button onclick="addToCart(${product.id})" class="add-to-cart-btn">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Function to render all products (for full catalog page)
-function renderProducts(productsToRender, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) {
-        console.error(`Container with ID "${containerId}" not found.`);
-        return;
-    }
-    console.log(`Rendering ${productsToRender.length} products to container: ${containerId}`);
-    container.innerHTML = '';
-
-    productsToRender.forEach(product => {
-        const originalPrice = product.price * 1.2; // Simulating original price
-        const discountPercentage = calculateDiscount(originalPrice, product.price);
-        const rating = (Math.random() * 2 + 3).toFixed(1); // Random rating between 3 and 5
-        const ratingCount = Math.floor(Math.random() * 1000) + 50; // Random number of ratings
-
-        const productCard = `
-            <div class="product-card">
-                ${discountPercentage >= 10 ? `<div class="product-badge">-${discountPercentage}%</div>` : ''}
-                <div class="product-image-container">
-                    <img src="${product.image}" alt="${product.name}" class="product-image">
-                </div>
-                <div class="product-details">
-                    <div class="product-category">${product.category}</div>
-                    <h3 class="product-name">${product.name}</h3>
-                    <div class="product-rating">
-                        <div class="rating-stars">
-                            ${generateStarRating(parseFloat(rating))}
-                        </div>
-                        <span class="rating-count">(${ratingCount})</span>
-                    </div>
-                    <div class="product-price">
-                        $${formatPrice(product.price)}
-                        <span class="original-price">$${formatPrice(originalPrice)}</span>
-                        <span class="discount-tag">${discountPercentage}% OFF</span>
-                    </div>
-                    <div class="product-features">
-                        <div class="feature-item">
-                            <i class="fas fa-check feature-icon"></i>
-                            <span>Free Delivery</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-undo feature-icon"></i>
-                            <span>7-Day Returns</span>
-                        </div>
-                    </div>
-                    <div class="product-actions">
-                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-                            <i class="fas fa-shopping-cart"></i>
-                            Add to Cart
-                        </button>
-                        <button class="wishlist-btn">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.innerHTML += productCard;
-    });
-}
-
-// Function to render category products
-function renderCategoryProducts(categoryName, containerId) {
-    const container = document.getElementById(containerId);
-    if (container) {
-        const categoryProducts = allProducts.filter(product => product.category === categoryName);
-        container.innerHTML = categoryProducts.map(product => `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.name}" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">${product.name}</h3>
-                    <p class="product-price">$${product.price.toFixed(2)}</p>
-                    <div class="product-buttons">
-                        <button onclick="addToCart(${product.id})" class="add-to-cart-btn">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-// Add to cart functionality
-function addToCart(productId) {
-    const product = allProducts.find(p => p.id === productId);
-    if (product) {
-        cart.push(product);
-        cartCount++;
-        updateCartCount();
-        showNotification(`${product.name} added to cart!`);
-    }
-}
-
-// Update cart count
-function updateCartCount() {
-    cartCountElement.textContent = cartCount;
-}
-
-// Show notification
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-// Handle contact form submission
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(contactForm);
-        // Here you would typically send the form data to a server
-        showNotification('Message sent successfully!');
-        contactForm.reset();
-    });
-}
-
-// Event listeners
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('add-to-cart')) {
-        const productId = parseInt(e.target.dataset.id);
-        addToCart(productId);
-    }
-});
-
-// Mobile menu toggle
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
-}
-
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (navLinks.classList.contains('active') && 
-        !e.target.closest('.nav-links') && 
-        !e.target.closest('.menu-toggle')) {
-        navLinks.classList.remove('active');
-    }
-});
-
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Function to generate star rating HTML
-function generateStarRating(rating) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    let starsHtml = '';
-    
-    for (let i = 0; i < fullStars; i++) {
-        starsHtml += '<i class="fas fa-star"></i>';
-    }
-    
-    if (hasHalfStar) {
-        starsHtml += '<i class="fas fa-star-half-alt"></i>';
-    }
-    
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-        starsHtml += '<i class="far fa-star"></i>';
-    }
-    
-    return starsHtml;
-}
-
-// Function to calculate discount percentage
-function calculateDiscount(originalPrice, currentPrice) {
-    const discount = ((originalPrice - currentPrice) / originalPrice) * 100;
-    return Math.round(discount);
-}
-
-// Function to format price
+// Helper functions
 function formatPrice(price) {
     return price.toFixed(2);
 }
 
-// Function to render all products
+function calculateDiscount(originalPrice, salePrice) {
+    return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+}
+
+function generateStarRating(rating) {
+    let stars = '';
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+    }
+    if (halfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    for (let i = fullStars + halfStar; i < 5; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+    return stars;
+}
+
+// Core rendering function
 function renderProducts(productsToRender, containerId) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    if (!container) {
+        console.error(`Container "${containerId}" not found.`);
+        return;
+    }
+    console.log(`Rendering ${productsToRender.length} products to ${containerId}`);
+    container.innerHTML = '<div class="loading-spinner">Loading products...</div>';
+    
+    setTimeout(() => {
+        container.innerHTML = '';
+        productsToRender.forEach(product => {
+            const originalPrice = product.price * 1.2; // Simulate original price
+            const discountPercentage = calculateDiscount(originalPrice, product.price);
+            const rating = (Math.random() * 2 + 3).toFixed(1); // Random rating 3-5
+            const ratingCount = Math.floor(Math.random() * 1000) + 50; // Random rating count
 
-    productsToRender.forEach(product => {
-        const originalPrice = product.price * 1.2; // Simulating original price
-        const discountPercentage = calculateDiscount(originalPrice, product.price);
-        const rating = (Math.random() * 2 + 3).toFixed(1); // Random rating between 3 and 5
-        const ratingCount = Math.floor(Math.random() * 1000) + 50; // Random number of ratings
-
-        const productCard = `
-            <div class="product-card">
-                ${discountPercentage >= 10 ? `<div class="product-badge">-${discountPercentage}%</div>` : ''}
-                <div class="product-image-container">
-                    <img src="${product.image}" alt="${product.name}" class="product-image">
-                </div>
-                <div class="product-details">
-                    <div class="product-category">${product.category}</div>
-                    <h3 class="product-name">${product.name}</h3>
-                    <div class="product-rating">
-                        <div class="rating-stars">
-                            ${generateStarRating(parseFloat(rating))}
-                        </div>
-                        <span class="rating-count">(${ratingCount})</span>
+            const productCard = `
+                <div class="product-card">
+                    ${discountPercentage >= 10 ? `<div class="product-badge">-${discountPercentage}%</div>` : ''}
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                     </div>
-                    <div class="product-price">
-                        $${formatPrice(product.price)}
-                        <span class="original-price">$${formatPrice(originalPrice)}</span>
-                        <span class="discount-tag">${discountPercentage}% OFF</span>
-                    </div>
-                    <div class="product-features">
-                        <div class="feature-item">
-                            <i class="fas fa-check feature-icon"></i>
-                            <span>Free Delivery</span>
+                    <div class="product-details">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-rating">
+                            <div class="rating-stars">
+                                ${generateStarRating(parseFloat(rating))}
+                            </div>
+                            <span class="rating-count">(${ratingCount})</span>
                         </div>
-                        <div class="feature-item">
-                            <i class="fas fa-undo feature-icon"></i>
-                            <span>7-Day Returns</span>
+                        <div class="product-price">
+                            $${formatPrice(product.price)}
+                            <span class="original-price">$${formatPrice(originalPrice)}</span>
+                            <span class="discount-tag">${discountPercentage}% OFF</span>
                         </div>
-                    </div>
-                    <div class="product-actions">
-                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-                            <i class="fas fa-shopping-cart"></i>
-                            Add to Cart
-                        </button>
-                        <button class="wishlist-btn">
-                            <i class="far fa-heart"></i>
-                        </button>
+                        <div class="product-features">
+                            <div class="feature-item">
+                                <i class="fas fa-check feature-icon"></i>
+                                <span>Free Delivery</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-undo feature-icon"></i>
+                                <span>7-Day Returns</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                                <i class="fas fa-shopping-cart"></i>
+                                Add to Cart
+                            </button>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        container.innerHTML += productCard;
-    });
+            `;
+            container.innerHTML += productCard;
+        });
+        if (!container.innerHTML) {
+            container.innerHTML = '<div class="error-message">Failed to load products. Please refresh.</div>';
+        }
+    }, 100);
 }
 
-// Function to render all products in catalog
+// Catalog page rendering
 function renderAllProducts() {
-    renderProducts(products, 'all-products');
+    console.log('Attempting to render all products...');
+    const attemptRender = () => {
+        const container = document.getElementById('all-products');
+        if (container) {
+            console.log('Container "all-products" found, rendering...');
+            renderProducts(allProducts, 'all-products');
+        } else {
+            console.warn('Container "all-products" not found, retrying...');
+            setTimeout(attemptRender, 100);
+        }
+    };
+    if (typeof renderProducts === 'function' && typeof allProducts !== 'undefined') {
+        attemptRender();
+    } else {
+        console.error('renderProducts or allProducts not defined, retrying...');
+        setTimeout(attemptRender, 100);
+    }
 }
 
-// Function to render category products
+// Category-specific rendering
 function renderCategoryProducts(category, containerId) {
-    const filteredProducts = products.filter(product => product.category === category);
+    const filteredProducts = allProducts.filter(product => product.category === category);
+    console.log(`Rendering ${filteredProducts.length} products for category: ${category}`);
     renderProducts(filteredProducts, containerId);
 }
 
-// Initialize the page
-document.addEventListener('DOMContentLoaded', () => {
-    renderFeaturedProducts(); // Show featured products on main page
-    renderAllProducts(); // Show all products on catalog page if it exists
-    renderCategoryProducts('Snacks', 'snacks-container');
-    renderCategoryProducts('Stationery', 'stationery-container');
-    renderPremiumProducts();
-    renderFreshProducts();
-    renderDealProducts();
-    
-    // Category navigation
-    const categoryLinks = document.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            // Remove active class from all links
-            categoryLinks.forEach(l => l.classList.remove('active'));
-            // Add active class to clicked link
-            link.classList.add('active');
-        });
-    });
+// Home page rendering functions
+function renderFeaturedProducts() {
+    const featuredProducts = allProducts.sort(() => Math.random() - 0.5).slice(0, 8);
+    renderProducts(featuredProducts, 'products-container');
+}
 
-    // Smooth scroll for category links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-    
-    // Initialize cart icon and modal
-    const cartIcon = document.querySelector('.cart-icon');
-    if (cartIcon) {
-        cartIcon.addEventListener('click', openCartModal);
-    }
+function renderPremiumProducts() {
+    const premiumProducts = allProducts.filter(p => p.price > 7).slice(0, 8);
+    renderProducts(premiumProducts, 'premium-products');
+}
 
-    const closeBtn = document.querySelector('.close-modal');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeCartModal);
-    }
+function renderFreshProducts() {
+    const freshProducts = allProducts.filter(p => ['Fruits', 'Vegetables'].includes(p.category)).slice(0, 8);
+    renderProducts(freshProducts, 'fresh-products');
+}
 
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-        const modal = document.getElementById('cartModal');
-        if (e.target === modal) {
-            closeCartModal();
+function renderDealProducts() {
+    const dealProducts = allProducts.sort((a, b) => a.price - b.price).slice(0, 8);
+    renderProducts(dealProducts, 'deal-products');
+}
+
+function renderSnacksProducts() {
+    const snacksProducts = allProducts.filter(p => p.category === 'Snacks').slice(0, 8);
+    renderProducts(snacksProducts, 'snacks-container');
+}
+
+function renderStationeryProducts() {
+    const stationeryProducts = allProducts.filter(p => p.category === 'Stationery').slice(0, 8);
+    renderProducts(stationeryProducts, 'stationery-container');
+}
+
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function addToCart(productId) {
+    const product = allProducts.find(p => p.id === productId);
+    if (product) {
+        const cartItem = cart.find(item => item.id === productId);
+        if (cartItem) {
+            cartItem.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
         }
-    });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+        console.log(`Added product ${productId} to cart`);
+    } else {
+        console.error(`Product ${productId} not found`);
+    }
+}
+
+function updateCartDisplay() {
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    if (cartItemsContainer && cartTotalElement) {
+        cartItemsContainer.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <p>$${formatPrice(item.price)} x ${item.quantity}</p>
+                </div>
+                <button class="remove-from-cart" onclick="removeFromCart(${item.id})">Remove</button>
+            </div>
+        `).join('');
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        cartTotalElement.textContent = `$${formatPrice(total)}`;
+    }
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    console.log(`Removed product ${productId} from cart`);
+}
+
+// Modal functionality
+function openCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        modal.style.display = 'block';
+        updateCartDisplay();
+    } else {
+        console.error('Cart modal not found');
+    }
+}
+
+function closeCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Initialize home page
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('products-container')) {
+        console.log('Initializing home page...');
+        renderFeaturedProducts();
+        renderPremiumProducts();
+        renderFreshProducts();
+        renderDealProducts();
+        renderSnacksProducts();
+        renderStationeryProducts();
+    }
+});
+
+// Handle modal close
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('close-modal')) {
+        closeCartModal();
+    }
 });
