@@ -1079,9 +1079,10 @@ function renderFeaturedProducts() {
 
 // Function to render all products (for full catalog page)
 function renderAllProducts() {
-    const fullCatalogContainer = document.getElementById('full-catalog-container');
-    if (fullCatalogContainer) {
-        fullCatalogContainer.innerHTML = allProducts.map(product => `
+    const container = document.getElementById('all-products');
+    if (container) {
+        renderProducts(allProducts,'all-products');
+        container.innerHTML = allProducts.map(product => `
             <div class="product-card">
                 <img src="${product.image}" alt="${product.name}" class="product-image">
                 <div class="product-info">
