@@ -76,6 +76,23 @@
             </div>
         </section>
     </main>
+    
+    <div id="cartModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Your Cart</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="cart-items"></div>
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -109,14 +126,18 @@
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAllProducts();
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Catalog page loaded, calling renderAllProducts()');
+        renderAllProducts();
 
-            // Add event listeners for sorting and filtering
-            document.getElementById('category-filter').addEventListener('change', (e) => {
+        // Add event listeners for sorting and filtering
+        const categoryFilter = document.getElementById('category-filter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', (e) => {
                 const category = e.target.value;
                 const productsContainer = document.getElementById('all-products');
                 productsContainer.innerHTML = '';
+                console.log(`Filtering by category: ${category}`);
                 
                 if (category === 'all') {
                     renderAllProducts();
@@ -124,25 +145,45 @@
                     renderCategoryProducts(category, 'all-products');
                 }
             });
+        } else {
+            console.error('Category filter element not found.');
+        }
 
-            document.getElementById('sort-price-asc').addEventListener('click', () => {
+        const sortPriceAsc = document.getElementById('sort-price-asc');
+        if (sortPriceAsc) {
+            sortPriceAsc.addEventListener('click', () => {
                 const sortedProducts = [...products].sort((a, b) => a.price - b.price);
+                console.log('Sorting products: Low to High');
                 renderProducts(sortedProducts, 'all-products');
             });
+        } else {
+            console.error('Sort price ascending button not found.');
+        }
 
-            document.getElementById('sort-price-desc').addEventListener('click', () => {
+        const sortPriceDesc = document.getElementById('sort-price-desc');
+        if (sortPriceDesc) {
+            sortPriceDesc.addEventListener('click', () => {
                 const sortedProducts = [...products].sort((a, b) => b.price - a.price);
+                console.log('Sorting products: High to Low');
                 renderProducts(sortedProducts, 'all-products');
             });
+        } else {
+            console.error('Sort price descending button not found.');
+        }
 
-            // Mobile menu toggle
-            const menuToggle = document.getElementById('menuToggle');
-            const navLinks = document.getElementById('navLinks');
-            
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (menuToggle && navLinks) {
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
+                console.log('Mobile menu toggled');
             });
-        });
+        } else {
+            console.error('Menu toggle or nav links not found.');
+        }
+    });
     </script>
 </body>
 </html>
