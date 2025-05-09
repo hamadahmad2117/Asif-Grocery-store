@@ -1078,25 +1078,65 @@ function renderFeaturedProducts() {
 }
 
 // Function to render all products (for full catalog page)
-function renderAllProducts() {
-    const container = document.getElementById('all-products');
-    if (container) {
-        renderProducts(allProducts,'all-products');
-        container.innerHTML = allProducts.map(product => `
+function renderProducts(productsToRender, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Container with ID "${containerId}" not found.`);
+        return;
+    }
+    console.log(`Rendering ${productsToRender.length} products to container: ${containerId}`);
+    container.innerHTML = '';
+
+    productsToRender.forEach(product => {
+        const originalPrice = product.price * 1.2; // Simulating original price
+        const discountPercentage = calculateDiscount(originalPrice, product.price);
+        const rating = (Math.random() * 2 + 3).toFixed(1); // Random rating between 3 and 5
+        const ratingCount = Math.floor(Math.random() * 1000) + 50; // Random number of ratings
+
+        const productCard = `
             <div class="product-card">
-                <img src="${product.image}" alt="${product.name}" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">${product.name}</h3>
-                    <p class="product-price">$${product.price.toFixed(2)}</p>
-                    <div class="product-buttons">
-                        <button onclick="addToCart(${product.id})" class="add-to-cart-btn">
+                ${discountPercentage >= 10 ? `<div class="product-badge">-${discountPercentage}%</div>` : ''}
+                <div class="product-image-container">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                </div>
+                <div class="product-details">
+                    <div class="product-category">${product.category}</div>
+                    <h3 class="product-name">${product.name}</h3>
+                    <div class="product-rating">
+                        <div class="rating-stars">
+                            ${generateStarRating(parseFloat(rating))}
+                        </div>
+                        <span class="rating-count">(${ratingCount})</span>
+                    </div>
+                    <div class="product-price">
+                        $${formatPrice(product.price)}
+                        <span class="original-price">$${formatPrice(originalPrice)}</span>
+                        <span class="discount-tag">${discountPercentage}% OFF</span>
+                    </div>
+                    <div class="product-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <span>Free Delivery</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-undo feature-icon"></i>
+                            <span>7-Day Returns</span>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-cart"></i>
                             Add to Cart
+                        </button>
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
                         </button>
                     </div>
                 </div>
             </div>
-        `).join('');
-    }
+        `;
+        container.innerHTML += productCard;
+    });
 }
 
 // Function to render category products
